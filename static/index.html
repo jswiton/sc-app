@@ -1,0 +1,108 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="SCApi">
+<head>
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+    <title>Node/Angular Todo App</title>
+
+    <!-- SCROLLS -->
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css"><!-- load bootstrap -->
+    <style>
+        html                    { overflow-y:scroll; }
+        body                    { padding-top:50px; }
+        #todo-list              { margin-bottom:30px; }
+        .label-info {   -moz-animation: currently 150ms steps(1, end) infinite; -webkit-animation: currently 150ms steps(1, end) infinite; }
+        .currentTrack { 
+                position: fixed;
+                float: left;
+                top: 20px;
+                left: 20px;
+                width: auto;
+            }
+    </style>
+
+    <!-- SPELLS -->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="//connect.soundcloud.com/sdk.js"></script>
+    <script type="text/javascript" src="ng.core.js"></script>
+    <script type="text/javascript" src="front.js"></script>
+
+</head>
+<!-- SET THE CONTROLLER AND GET ALL TODOS -->
+<body>
+    <div class="container" ng-controller="TracksController">
+
+        <div id="todo-form" class="jumbotron">
+            <form>
+                <div class="input-group">
+                   <input type="text" class="form-control" placeholder="ENTER A SOUNDCLOUD USERNAME/URL" ng-model="formData.text">
+                   <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" ng-click="searchFavorites()">Search</button>
+                   </span>
+                </div>
+
+                <!-- createToDo() WILL CREATE NEW TODOS -->
+                
+            </form>
+        </div>
+
+        <div ng-show="user.length != 0">
+            <div class="jumbotron" ng-show="favoritesCount">
+                <div ng-controller="favoritesController">
+                    <img class="thumbnail" ng-hide="avatarUrl.strUrl == ''" ng-src="{{ avatarUrl.strUrl }}"/>
+                </div>
+                <h2>Favorites tracks: <span class="label label-info">{{ favoritesCount }}</span></h2>
+                <form class="form-inline">
+                  <input ng-model="query" type="text" placeholder="Filter by" autofocus>
+                </form>
+            </div>
+
+            <div class="jumbotron" ng-show="favoritesCount == []">
+                This user has no favorites ,-(
+            </div>
+
+            <div class="currentTrack" ng-show="currentTrackTitle">
+                <div class="media bs-callout bs-callout-info" >
+                  <div class="media-left">
+                    <img class="thumbnail media-object" style="width: 110px; height: 110px;" alt="COVER NOT FOUND" ng-hide="currentTrackArtwork_url == ''" ng-src="{{ currentTrackArtwork_url && currentTrackArtwork_url || 'http://static.discogs.com/images/default-release.png' }}" />
+                  </div>
+                  <div class="media-body">
+                    <h5 class="media-heading text-uppercase" id="top-aligned-media"><span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span> {{ currentTrackUsername }} - {{ currentTrackTitle }}</h5>
+                  </div>
+                  <a href="#" class="btn btn-default btn-xs pause" role="button"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></a>
+                  <a href="#" class="btn btn-default btn-xs play" role="button"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></a>
+                  <a href="#" class="btn btn-default btn-xs stop" role="button"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></a>
+                </div>
+            </div>
+
+            <ul class="list-group">
+              <li class="list-group-item" ng-repeat="track in tracks | filter:query" style="background-image: url('{{ track.waveform_url }}');">
+                <div class="media bs-callout bs-callout-info" >
+                  <div class="media-left">
+                    <img class="thumbnail media-object" style="width: 110px; height: 110px;" alt="COVER NOT FOUND" ng-hide="track.artwork_url == ''" ng-src="{{ track.artwork_url && track.artwork_url || 'http://static.discogs.com/images/default-release.png' }}" />
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading text-uppercase" id="top-aligned-media"><span class="glyphicon glyphicon-equalizer" aria-hidden="true"></span> {{ track.user.username }} - {{ track.title }}</h4>
+                    <p class="text-muted"><span class="glyphicon glyphicon-tags" aria-hidden="true" ng-show="track.tag_list != ''"></span> <small>{{ track.tag_list }}</small></p>
+                    <p><span class="badge">{{ track.genre }}</span></p>
+                    <p><a href="#" data-track-id="{{ track.id }}" ng-click="showCurrentTrack(track)" class="btn btn-primary btn-xs start" role="button">PLAY</a></p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            
+
+        </div>
+        <div class="jumbotron" ng-show="user.length == 0">
+            No user found ,-(
+        </div>
+
+    </div>
+
+</body>
+</html>

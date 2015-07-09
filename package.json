@@ -1,0 +1,19 @@
+{
+  "name": "sc-app",
+  "version": "0.0.0",
+  "description": "Simple application integrate with Sound Cloud.",
+  "main": "server.js",
+  "author": "jswiton",
+  "dependencies": {
+    "express": "~4.7.2",
+    "morgan"     : "~1.2.2",
+    "body-parser": "~1.5.2",
+	  "node-soundcloud": "0.0.1",
+	  "soundcloud-resolver": "~0.0.3"	
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "devDependencies": {},
+  "license": "ISC"
+}
